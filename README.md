@@ -5,9 +5,9 @@ Ruby on Rails app with Rails UI to keep track of members of different teams and 
 ## Prerequisites
 Before you begin, ensure that you have the following installed on your computer:
 
-*Ruby
-*Rails
-*PostgreSQL
+* Ruby
+* Rails
+* PostgreSQL
 
 ## Downloading the Project
 
