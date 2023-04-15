@@ -1,43 +1,43 @@
 # Endpoints to: Create/Update/Delete/Index/Show projects
 # Endpoint to: Get the members of a specific project
 class ProjectsController < ApplicationController
-  before_action :set_project, only: %i[update destroy show members]
+  before_action :set_project, only: %i[show edit update destroy]
+
+  def index
+    @projects = Project.all
+  end
+
+  def show
+    @members = @project.members
+  end
+
+  def new
+    @project = Project.new
+  end
 
   def create
     @project = Project.new(project_params)
 
     if @project.save
-      render json: @project, status: :created
+      redirect_to @project, notice: 'Project was successfully created.'
     else
-      render json: @project.errors, status: :unprocessable_entity
+      render :new, status: :unprocessable_entity
     end
   end
 
+  def edit; end
+
   def update
     if @project.update(project_params)
-      render json: @project
+      redirect_to @project, notice: 'Project was successfully updated.'
     else
-      render json: @project.errors, status: :unprocessable_entity
+      render :edit
     end
   end
 
   def destroy
     @project.destroy
-    head :no_content
-  end
-
-  def index
-    @projects = Project.all
-    render json: @projects
-  end
-
-  def show
-    render json: @project
-  end
-
-  def members
-    @members = @project.members
-    render json: @members
+    redirect_to projects_url, notice: 'Project was successfully destroyed.'
   end
 
   private
@@ -47,6 +47,6 @@ class ProjectsController < ApplicationController
   end
 
   def project_params
-    params.permit(:name)
+    params.require(:project).permit(:name)
   end
 end

@@ -1,0 +1,22 @@
+<h1>Project Details</h1>
+
+<p><strong>Name:</strong> <%= @project.name %></p>
+
+<br>
+
+<h2>Members</h2>
+
+<ul>
+  <% if @members.any? %>
+    <% @members.each do |member| %>
+      <li><%= link_to member.name, member %></li>
+    <% end %>
+  <% else %>
+    <p>No members</p>
+  <% end %>
+</ul>
+
+<br>
+
+<%= link_to 'Edit', edit_project_path(@project) %> |
+<%= link_to 'Back', projects_path %>

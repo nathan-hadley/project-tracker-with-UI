@@ -2,47 +2,47 @@
 # Endpoint to: Update the team of a member
 # Endpoint to: Add a member to a project
 class MembersController < ApplicationController
-  before_action :set_member, only: %i[update destroy show add_project projects]
+  before_action :set_member, only: %i[show edit update destroy add_project projects]
+
+  def index
+    @members = Member.all
+  end
+
+  def show; end
+
+  def new
+    @member = Member.new
+  end
 
   def create
-    team = Team.find_by(id: params[:team_id])
-    return render json: { error: 'Team not found' }, status: :unprocessable_entity if team.nil?
-
-    @member = team.members.new(member_params)
+    @member = Member.new(member_params)
 
     if @member.save
-      render json: @member, status: :created
+      redirect_to @member, notice: 'Member was successfully created.'
     else
-      render json: @member.errors, status: :unprocessable_entity
+      render :new, status: :unprocessable_entity
     end
   end
 
+  def edit; end
+
   def update
     if @member.update(member_params)
-      render json: @member
+      redirect_to @member, notice: 'Member was successfully updated.'
     else
-      render json: @member.errors, status: :unprocessable_entity
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
     @member.destroy
-    head :no_content
-  end
-
-  def index
-    @members = Member.all
-    render json: @members
-  end
-
-  def show
-    render json: @member
+    redirect_to members_url, notice: 'Member was successfully destroyed.'
   end
 
   def add_project
     project = Project.find(params[:project_id])
     @member.projects << project
-    render json: @member.projects, status: :created
+    redirect_to member_path(@member), notice: 'Member was successfully added to the project.'
   end
 
   private
@@ -52,6 +52,8 @@ class MembersController < ApplicationController
   end
 
   def member_params
-    params.permit(:first_name, :last_name, :city, :state, :country, :team_id)
+    params.require(:member).permit(:first_name, :last_name, :city, :state, :country, :team_id)
   end
 end
+
+

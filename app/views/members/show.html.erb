@@ -1,0 +1,35 @@
+<h1>Member Details</h1>
+
+<p><strong>First Name:</strong> <%= @member.first_name %></p>
+<p><strong>Last Name:</strong> <%= @member.last_name %></p>
+<p><strong>City:</strong> <%= @member.city %></p>
+<p><strong>State:</strong> <%= @member.state %></p>
+<p><strong>Country:</strong> <%= @member.country %></p>
+
+<br>
+
+<h2>Team</h2>
+
+<p><%= link_to @member.team.name, @member.team %></p>
+
+<br>
+
+<h2>Projects</h2>
+
+<ul>
+  <% @member.projects.each do |project| %>
+    <li><%= link_to project.name, project %></li>
+  <% end %>
+</ul>
+
+<%= form_with url: add_project_member_path, method: :post, local: true do |form| %>
+  <%= form.label :project_id, "Select project to assign:" %>
+  <%= form.collection_select :project_id, Project.all, :id, :name, prompt: "Choose a project" %>
+  <%= form.hidden_field :member_id, value: @member.id %>
+  <%= form.submit "Add Project" %>
+<% end %>
+
+<br>
+
+<%= link_to 'Edit', edit_member_path(@member) %> |
+<%= link_to 'Back', members_path %>
